@@ -1,4 +1,4 @@
-input = open('input', 'r')
+input = open('day1-input', 'r')
 
 readings = []
 for line in input:
