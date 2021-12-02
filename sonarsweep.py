@@ -1,10 +1,7 @@
-input = open('day1-input', 'r')
-
-readings = []
-for line in input:
-    readings.append(int(line[:len(line)-1]))
-
-input.close()
+with open('day1-input', 'r') as input:
+    readings = []
+    for line in input:
+        readings.append(int(line[:len(line)-1]))
 
 def smooth(granular):
     return([granular[x] + granular[x+1] + granular[x+2] for x in range(0,len(granular)-2)])
