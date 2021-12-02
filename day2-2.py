@@ -1,4 +1,4 @@
-with open('day2-input', 'r') as input:
+with open('inputs/day2-input', 'r') as input:
     commands = []
     for line in input:
         commands.append(line[:len(line)-1])

@@ -1,4 +1,4 @@
-with open('day1-input', 'r') as input:
+with open('inputs/day1-input', 'r') as input:
     readings = []
     for line in input:
         readings.append(int(line[:len(line)-1]))
