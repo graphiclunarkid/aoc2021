@@ -7,38 +7,46 @@ class Player():
     Attributes:
         card -- 2d array representing the current state of the player's bingo card.
 
-        number -- the called number that the player heard last.
-        
         score -- the sum of the non-marked squares on the player's board multiplied
         by the last called number.
 
-        winner -- Boolean indicating whether the player has marked a winning line
+        complete -- Boolean indicating whether the player has marked a winning line
         on their card.
+
+        position -- The number of calls it took the player to complete their card.
 
     Methods:
         mark -- mark the called number if it is on the player's card.
     """
 
     def __init__(self, card):
-        self.number = 0
+        self._number = 0
+        self.position = 0
         self.card = card
         self.card.extend(np.transpose(self.card))
 
     def mark(self, number):
-        self.number = number
-        self.card = [[square for square in row if square != self.number] for row in self.card]
+        self._number = number
+        self.card = [[square for square in row if square != self._number] for row in self.card]
 
     def get_score(self):
-        return(self.number * sum(map(sum, self.card)) / 2)
+        return(self._number * sum(map(sum, self.card)) / 2)
 
-    def get_winner(self):
+    def get_complete(self):
         for row in self.card:
             if len(row) == 0:
                 return(True)
         return(False)
 
+    def set_position(self, position):
+        self._position = position
+
+    def get_position(self):
+        return self._position
+
     score = property(get_score)
-    winner = property(get_winner)
+    complete = property(get_complete)
+    position = property(get_position, set_position)
 
 
 def chunks(lst, n):
@@ -46,12 +54,6 @@ def chunks(lst, n):
     for i in range(0, len(lst), n):
         yield lst[i:i + n]
 
-def play(calls):
-    for call in calls:
-        for player in players:
-            player.mark(call)
-            if player.winner:
-                return(player.score)
 
 lines = []
 with open('inputs/day4-input', 'r') as input:
@@ -63,9 +65,17 @@ calls = list(map(int, "".join(lines.pop(0)).split(",")))
 lines = [list(map(int, line)) for line in lines]
 cards = list(chunks(lines, len(lines[0])))
 players = [Player(card) for card in cards]
+results = []
 
-result = play(calls)
+for player in players:
+    for call in calls:
+        player.mark(call)
+        if player.complete:
+            player.position = calls.index(call)
+            results.append([player.position, player.score])
+            break
 
-print()
-print(f"{result}")
-print()
+results_sorted = sorted(results,key=lambda X: X[0])
+
+print(f"First board wins with score: {results_sorted[0][1]}")
+print(f"Last board completes with score: {results_sorted[-1][1]}")
