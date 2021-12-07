@@ -13,18 +13,25 @@ def expand(points):
     line = []
     if startx == endx:
         if starty < endy:
-            line = [(startx, y) for y in range(starty,endy + 1)]
+            line = [(startx, y) for y in range(starty, endy + 1)]
         else:
-            line = [(startx, y) for y in range(endy,starty + 1)]
+            line = [(startx, y) for y in range(endy, starty + 1)]
     elif starty == endy:
         if startx < endx:
-            line = [(x, starty) for x in range(startx,endx + 1)]
+            line = [(x, starty) for x in range(startx, endx + 1)]
         else:
-            line = [(x, starty) for x in range(endx,startx + 1)]
+            line = [(x, starty) for x in range(endx, startx + 1)]
     else:
-        raise ValueError
-
+        if startx < endx:
+            line = list(zip(range(startx, endx + 1), range(starty, endy + 1)))
+        else:
+            line = list(zip(range(startx, endx - 1, -1), range(starty, endy + 1)))
     return(line)
+
+def countHotSpots(ventMap):
+    hotSpots = Counter(ventMap)
+    hotSpots = {key:val for key, val in hotSpots.items() if val > 1}
+    return(len(hotSpots))
 
 
 with open('inputs/day5-input', 'r') as input:
@@ -37,23 +44,14 @@ allLines = []
 for line in inputLines:
     allLines.append([tuple(i.split(',')) for i in line])
 
-horizLines = []
-vertLines = []
-diagLines = []
-ventMap = []
+ventMapPart1 = []
 for line in allLines:
-    if line[0][1] == line[1][1]:
-        """ Horizontal """
-        horizLines.append(line)
-        ventMap.extend(expand(line))
-    elif line[0][0] == line[1][0]:
-        """ Vertical """
-        vertLines.append(line)
-        ventMap.extend(expand(line))
-    else:
-        """ Diagonal """
-        diagLines.append(line)
+    if (line[0][1] == line[1][1]) or (line[0][0] == line[1][0]):
+        ventMapPart1.extend(expand(line))
 
-hotSpots = Counter(ventMap)
-hotSpots = {key:val for key, val in hotSpots.items() if val > 1}
-print(f"{len(hotSpots)}")
+ventMapPart2 = []
+for line in allLines:
+    ventMapPart2.extend(expand(line))
+
+print(f"Hotspots in part 1: {countHotSpots(ventMapPart1)}")
+print(f"Hotspots in part 2: {countHotSpots(ventMapPart2)}")
