@@ -23,9 +23,15 @@ def expand(points):
             line = [(x, starty) for x in range(endx, startx + 1)]
     else:
         if startx < endx:
-            line = list(zip(range(startx, endx + 1), range(starty, endy + 1)))
+            if starty < endy:
+                line = list(zip(range(startx, endx + 1), range(starty, endy + 1)))
+            else:
+                line = list(zip(range(startx, endx + 1), range(starty, endy - 1, -1)))
         else:
-            line = list(zip(range(startx, endx - 1, -1), range(starty, endy + 1)))
+            if starty < endy:
+                line = list(zip(range(startx, endx - 1, -1), range(starty, endy + 1)))
+            else:
+                line = list(zip(range(startx, endx -1, -1), range(starty, endy - 1, -1)))
     return(line)
 
 def countHotSpots(ventMap):
