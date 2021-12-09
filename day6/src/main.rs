@@ -1,7 +1,6 @@
 use counter::Counter;
 
 fn increment_day(s: counter::Counter<&str>) -> counter::Counter<&str> {
-
     // We'll implement the logic here
     s
 }
