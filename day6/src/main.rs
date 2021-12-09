@@ -7,10 +7,6 @@ fn increment_day(s: counter::Counter<&str>) -> counter::Counter<&str> {
     s
 }
 
-fn print_type_of<T>(_: &T) {
-    println!("{}", std::any::type_name::<T>())
-}
-
 fn main() {
 
     // Read puzzle input from file
@@ -21,11 +17,9 @@ fn main() {
     let school = input.trim().split(',')
         .collect::<Counter<_>>();
 
-    print_type_of(&school);
-    
-    let new_school = increment_day(school);
+    println!("   Today's school: {:?}", school);
 
-//    println!("   Today's school: {:?}", school);
+    let new_school = increment_day(school);
 
     println!("Tomorrow's school: {:?}", new_school);
 }
