@@ -43,10 +43,10 @@ fn simulate_lanternfish(days: u32, mut school: counter::Counter<&str>) {
     
 }
 
-fn main() {
+fn get_school(filename: &str) -> Counter<&str> {
 
     // Open puzzle input file
-    let path = Path::new("data/day6-input");
+    let path = Path::new(&filename);
     let display = path.display();
     let mut file = match File::open(&path) {
         Err(why) => panic!("Couldn't open {}: {}", display, why),
@@ -61,9 +61,16 @@ fn main() {
     };
 
     // Convert puzzle input into a Counter object (https://docs.rs/counter/latest/counter/)
-    let school: Counter<&str> = input.trim().split(',').collect();
+    input.trim().split(',').collect::<Counter<_>>()
+
+}
+
+fn main() {
+
+    let test_school = get_school("data/test-input");
+    simulate_lanternfish(80, test_school);
    
-    // Execute simulation loop
+    let school = get_school("data/day6-input");
     simulate_lanternfish(80, school.clone());
     simulate_lanternfish(256, school.clone());
 
