@@ -3,7 +3,7 @@ use std::io::prelude::*;
 use std::path::Path;
 use counter::Counter;
 
-fn increment_day(school: counter::Counter<&str>) -> counter::Counter<&str> {
+fn increment_day<'a>(school: &Counter<&str>) -> Counter<&'a str> {
 
     let mut new_school = Counter::new();
 
@@ -22,23 +22,25 @@ fn increment_day(school: counter::Counter<&str>) -> counter::Counter<&str> {
 
 }
 
-fn simulate_lanternfish(days: u32, mut school: counter::Counter<&str>) {
+fn simulate_lanternfish(days: u32, school: &Counter<&str>) {
 
     println!("");
     println!("Initial state: {:?}", school);
 
-    for _ in 1..days+1 {
+    // Initialise our internal tracking Counter
+    // and perform the first iteration
+    let mut new_school: Counter<&str> = increment_day(school);
 
-        school = increment_day(school);
+    // Start looping from day 2 since day 1 was done above
+    for _ in 2..days+1 {
+
+        new_school = increment_day(&new_school);
 
     }
 
-    let mut count = 0;
-    for value in school.values() {
-        count += value;
-    }
+    let count: usize = new_school.values().sum();
 
-    println!("State after {} days: {:?}", days, school);
+    println!("State after {} days: {:?}", days, new_school);
     println!("Total number of lanternfish after {} days: {:?}", days, count);
     
 }
@@ -68,10 +70,10 @@ fn get_school(filename: &str) -> Counter<&str> {
 fn main() {
 
     let test_school = get_school("data/test-input");
-    simulate_lanternfish(80, test_school);
+    simulate_lanternfish(80, &test_school);
    
     let school = get_school("data/day6-input");
-    simulate_lanternfish(80, school.clone());
-    simulate_lanternfish(256, school.clone());
+    simulate_lanternfish(80, &school);
+    simulate_lanternfish(256, &school);
 
 }
